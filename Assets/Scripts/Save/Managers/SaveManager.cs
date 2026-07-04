@@ -6,18 +6,40 @@ namespace Save.Managers
 {
     public class SaveManager : MonoBehaviour
     {
-        private string saveFolder;
+        public static SaveManager Instance { get; private set; }
+
+        public int CurrentSlot { get; private set; } = -1;
+
+        private string SaveFolder
+        {
+            get
+            {
+                string path = Path.Combine(Application.persistentDataPath, "Saves");
+
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
+                return path;
+            }
+        }
 
         private void Awake()
         {
-            saveFolder = Path.Combine(Application.persistentDataPath, "Saves");
+            if (Instance == null)
+                Instance = this;
+            else
+                Destroy(gameObject);
+        }
 
-            if (!Directory.Exists(saveFolder))
-                Directory.CreateDirectory(saveFolder);
+        public void SetCurrentSlot(int slot)
+        {
+            CurrentSlot = slot;
         }
 
         public void CreateSave(int slot, string saveName)
         {
+            CurrentSlot = slot;
+
             SaveData data = new SaveData
             {
                 Slot = slot,
@@ -26,18 +48,23 @@ namespace Save.Managers
                 LastPlayedAt = DateTime.Now.ToString("dd.MM.yyyy HH:mm")
             };
 
+            Save(data);
+        }
+
+        public void Save(SaveData data)
+        {
             string json = JsonUtility.ToJson(data, true);
 
-            string path = Path.Combine(saveFolder, $"slot{slot}.json");
-
-            File.WriteAllText(path, json);
-
-            Debug.Log($"Сохранение Slot {slot} создано.");
+            File.WriteAllText(
+                Path.Combine(SaveFolder, $"slot{data.Slot}.json"),
+                json);
         }
 
         public SaveData LoadSave(int slot)
         {
-            string path = Path.Combine(saveFolder, $"slot{slot}.json");
+            CurrentSlot = slot;
+
+            string path = Path.Combine(SaveFolder, $"slot{slot}.json");
 
             if (!File.Exists(path))
                 return null;
@@ -47,12 +74,29 @@ namespace Save.Managers
             return JsonUtility.FromJson<SaveData>(json);
         }
 
+        public bool HasSave(int slot)
+        {
+            return File.Exists(Path.Combine(SaveFolder, $"slot{slot}.json"));
+        }
+
         public void DeleteSave(int slot)
         {
-            string path = Path.Combine(saveFolder, $"slot{slot}.json");
+            string path = Path.Combine(SaveFolder, $"slot{slot}.json");
 
             if (File.Exists(path))
                 File.Delete(path);
+        }
+
+        public void UpdateLastPlayed(int slot)
+        {
+            SaveData data = LoadSave(slot);
+
+            if (data == null)
+                return;
+
+            data.LastPlayedAt = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
+
+            Save(data);
         }
     }
 }

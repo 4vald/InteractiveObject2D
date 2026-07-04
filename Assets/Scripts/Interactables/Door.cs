@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-public class Door : InteractableBase
+public class Door : InteractableBase, ISaveable
 {
     [SerializeField] private DoorData data;
+    [SerializeField] private string saveId;
 
     private Animator animator;
     private bool isOpen;
@@ -30,6 +31,8 @@ public class Door : InteractableBase
 
         isOpen = true;
         animator.SetBool("Open", true);
+
+        AutoSave();
     }
 
     public void Close()
@@ -39,6 +42,8 @@ public class Door : InteractableBase
 
         isOpen = false;
         animator.SetBool("Open", false);
+
+        AutoSave();
     }
 
     public void Toggle()
@@ -47,5 +52,32 @@ public class Door : InteractableBase
             Close();
         else
             Open();
+    }
+
+    private void AutoSave()
+    {
+        if (Save.Managers.SaveManager.Instance == null)
+            return;
+
+        if (Save.Managers.SaveManager.Instance.CurrentSlot == -1)
+            return;
+
+        Debug.Log("Автосохранение двери");
+    }
+
+    public string GetId()
+    {
+        return saveId;
+    }
+
+    public bool CaptureState()
+    {
+        return isOpen;
+    }
+
+    public void RestoreState(bool state)
+    {
+        isOpen = state;
+        animator.SetBool("Open", isOpen);
     }
 }
