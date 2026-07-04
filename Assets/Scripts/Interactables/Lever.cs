@@ -26,6 +26,7 @@ public class Lever : InteractableBase, ISaveable
         isActivated = !isActivated;
 
         animator.SetBool("IsOn", isActivated);
+        AudioManager.Instance?.PlayLever();
 
         if (isActivated)
             onLeverActivated.Invoke();

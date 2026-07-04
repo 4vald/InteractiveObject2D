@@ -31,6 +31,7 @@ public class Door : InteractableBase, ISaveable
 
         isOpen = true;
         animator.SetBool("Open", true);
+        AudioManager.Instance?.PlayDoorOpen();
 
         AutoSave();
     }
@@ -42,6 +43,7 @@ public class Door : InteractableBase, ISaveable
 
         isOpen = false;
         animator.SetBool("Open", false);
+        AudioManager.Instance?.PlayDoorClose();
 
         AutoSave();
     }

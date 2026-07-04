@@ -63,6 +63,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void OpenLanguage()
     {
+        AudioManager.Instance?.PlayButton();
+
         HideAll();
 
         if (isRussian)
@@ -73,6 +75,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void OpenNewGame()
     {
+        AudioManager.Instance?.PlayButton();
+
         HideAll();
 
         selectedSlot = 0;
@@ -85,6 +89,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void OpenLoadGame()
     {
+        AudioManager.Instance?.PlayButton();
+
         HideAll();
 
         if (isRussian)
@@ -95,41 +101,54 @@ public class MainMenuManager : MonoBehaviour
 
     public void Back()
     {
+        AudioManager.Instance?.PlayButton();
         ShowMainMenu();
     }
 
     public void SetRussian()
     {
+        AudioManager.Instance?.PlayButton();
+
         isRussian = true;
         ShowMainMenu();
     }
 
     public void SetEnglish()
     {
+        AudioManager.Instance?.PlayButton();
+
         isRussian = false;
         ShowMainMenu();
     }
 
     public void SelectSlot1()
     {
+        AudioManager.Instance?.PlayButton();
+
         selectedSlot = 1;
         Debug.Log("Выбран слот 1");
     }
 
     public void SelectSlot2()
     {
+        AudioManager.Instance?.PlayButton();
+
         selectedSlot = 2;
         Debug.Log("Выбран слот 2");
     }
 
     public void SelectSlot3()
     {
+        AudioManager.Instance?.PlayButton();
+
         selectedSlot = 3;
         Debug.Log("Выбран слот 3");
     }
 
     public void CreateSave()
     {
+        AudioManager.Instance?.PlayButton();
+
         if (selectedSlot == 0)
         {
             Debug.Log("Выберите слот.");
@@ -152,6 +171,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void ExitGame()
     {
+        AudioManager.Instance?.PlayButton();
         Application.Quit();
     }
 }

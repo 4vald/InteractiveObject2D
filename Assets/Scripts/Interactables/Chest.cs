@@ -22,6 +22,7 @@ public class Chest : InteractableBase, ISaveable
 
         isOpened = true;
         animator.SetBool("Open", true);
+        AudioManager.Instance?.PlayChestOpen();
 
         AutoSave();
     }

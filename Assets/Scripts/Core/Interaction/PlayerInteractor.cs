@@ -10,7 +10,9 @@ public class PlayerInteractor : MonoBehaviour
     [SerializeField] private InteractionUI interactionUI;
 
     private PlayerInputActions inputActions;
+
     private IInteractable currentInteractable;
+    private OutlineTarget currentOutline;
 
     private void Awake()
     {
@@ -66,24 +68,34 @@ public class PlayerInteractor : MonoBehaviour
 
     private void FindInteractable()
     {
+        if (currentOutline != null)
+        {
+            currentOutline.DisableOutline();
+            currentOutline = null;
+        }
+
         currentInteractable = null;
 
-        Collider2D[] colliders =
-            Physics2D.OverlapCircleAll(
-                transform.position,
-                interactionRadius,
-                interactableLayer);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(
+            transform.position,
+            interactionRadius,
+            interactableLayer);
 
         foreach (Collider2D collider in colliders)
         {
-            IInteractable interactable =
-                collider.GetComponent<IInteractable>();
+            IInteractable interactable = collider.GetComponent<IInteractable>();
 
-            if (interactable != null)
-            {
-                currentInteractable = interactable;
-                return;
-            }
+            if (interactable == null)
+                continue;
+
+            currentInteractable = interactable;
+
+            currentOutline = collider.GetComponent<OutlineTarget>();
+
+            if (currentOutline != null)
+                currentOutline.EnableOutline();
+
+            return;
         }
     }
 

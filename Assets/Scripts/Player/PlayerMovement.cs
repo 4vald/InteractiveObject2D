@@ -33,7 +33,8 @@ public class PlayerMovement : MonoBehaviour
     {
         movement = input.Player.Move.ReadValue<Vector2>();
 
-        animator.SetBool("IsMoving", movement != Vector2.zero);
+        if (animator != null)
+            animator.SetBool("IsMoving", movement != Vector2.zero);
 
         if (movement.x != 0)
         {

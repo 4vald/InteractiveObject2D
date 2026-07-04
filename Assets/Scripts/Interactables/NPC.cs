@@ -10,6 +10,8 @@ public class NPC : InteractableBase
         if (DialogueManager.Instance == null)
             return;
 
+        AudioManager.Instance?.PlayNPC();
+
         if (!DialogueManager.Instance.IsDialogueOpen)
         {
             DialogueManager.Instance.StartDialogue(dialogue);
