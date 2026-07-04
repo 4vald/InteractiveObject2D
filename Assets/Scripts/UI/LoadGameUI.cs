@@ -45,7 +45,7 @@ public class LoadGameUI : MonoBehaviour
         TMP_Text lastPlayed,
         GameObject deleteButton)
     {
-        var save = saveManager.LoadSave(slot);
+        SaveData save = saveManager.LoadSave(slot);
 
         if (save == null)
         {
@@ -63,7 +63,6 @@ public class LoadGameUI : MonoBehaviour
 
         deleteButton.SetActive(true);
     }
-
 
     public void LoadSlot1()
     {
@@ -88,12 +87,11 @@ public class LoadGameUI : MonoBehaviour
             return;
         }
 
+        saveManager.SetCurrentSlot(slot);
         saveManager.UpdateLastPlayed(slot);
 
         SceneManager.LoadScene("MainScene");
     }
-
-
 
     public void DeleteSlot1()
     {

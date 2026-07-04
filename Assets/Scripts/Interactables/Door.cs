@@ -56,13 +56,10 @@ public class Door : InteractableBase, ISaveable
 
     private void AutoSave()
     {
-        if (Save.Managers.SaveManager.Instance == null)
+        if (GameManager.Instance == null)
             return;
 
-        if (Save.Managers.SaveManager.Instance.CurrentSlot == -1)
-            return;
-
-        Debug.Log("Автосохранение двери");
+        GameManager.Instance.SaveGame();
     }
 
     public string GetId()

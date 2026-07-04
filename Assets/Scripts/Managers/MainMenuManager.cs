@@ -145,6 +145,7 @@ public class MainMenuManager : MonoBehaviour
         }
 
         saveManager.CreateSave(selectedSlot, saveName);
+        saveManager.SetCurrentSlot(selectedSlot);
 
         SceneManager.LoadScene("MainScene");
     }
