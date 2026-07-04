@@ -5,31 +5,19 @@ using Save.Managers;
 
 public class MainMenuManager : MonoBehaviour
 {
-    [Header("Main Menu")]
-    [SerializeField] private GameObject menuRU;
-    [SerializeField] private GameObject menuEN;
-
-    [Header("Language")]
-    [SerializeField] private GameObject languageRU;
-    [SerializeField] private GameObject languageEN;
-
-    [Header("New Game")]
-    [SerializeField] private GameObject newGameRU;
-    [SerializeField] private GameObject newGameEN;
-
-    [Header("Load Game")]
-    [SerializeField] private GameObject loadGameRU;
-    [SerializeField] private GameObject loadGameEN;
+    [Header("Panels")]
+    [SerializeField] private GameObject menuPanel;
+    [SerializeField] private GameObject newGamePanel;
+    [SerializeField] private GameObject loadGamePanel;
+    [SerializeField] private GameObject languagePanel;
 
     [Header("Input")]
-    [SerializeField] private TMP_InputField inputRU;
-    [SerializeField] private TMP_InputField inputEN;
+    [SerializeField] private TMP_InputField saveNameInput;
 
     [Header("Managers")]
     [SerializeField] private SaveManager saveManager;
 
-    private bool isRussian = true;
-    private int selectedSlot = 0;
+    private int selectedSlot;
 
     private void Start()
     {
@@ -38,39 +26,16 @@ public class MainMenuManager : MonoBehaviour
 
     private void HideAll()
     {
-        menuRU.SetActive(false);
-        menuEN.SetActive(false);
-
-        languageRU.SetActive(false);
-        languageEN.SetActive(false);
-
-        newGameRU.SetActive(false);
-        newGameEN.SetActive(false);
-
-        loadGameRU.SetActive(false);
-        loadGameEN.SetActive(false);
+        menuPanel.SetActive(false);
+        newGamePanel.SetActive(false);
+        loadGamePanel.SetActive(false);
+        languagePanel.SetActive(false);
     }
 
     public void ShowMainMenu()
     {
         HideAll();
-
-        if (isRussian)
-            menuRU.SetActive(true);
-        else
-            menuEN.SetActive(true);
-    }
-
-    public void OpenLanguage()
-    {
-        AudioManager.Instance?.PlayButton();
-
-        HideAll();
-
-        if (isRussian)
-            languageRU.SetActive(true);
-        else
-            languageEN.SetActive(true);
+        menuPanel.SetActive(true);
     }
 
     public void OpenNewGame()
@@ -81,10 +46,7 @@ public class MainMenuManager : MonoBehaviour
 
         selectedSlot = 0;
 
-        if (isRussian)
-            newGameRU.SetActive(true);
-        else
-            newGameEN.SetActive(true);
+        newGamePanel.SetActive(true);
     }
 
     public void OpenLoadGame()
@@ -93,15 +55,22 @@ public class MainMenuManager : MonoBehaviour
 
         HideAll();
 
-        if (isRussian)
-            loadGameRU.SetActive(true);
-        else
-            loadGameEN.SetActive(true);
+        loadGamePanel.SetActive(true);
+    }
+
+    public void OpenLanguage()
+    {
+        AudioManager.Instance?.PlayButton();
+
+        HideAll();
+
+        languagePanel.SetActive(true);
     }
 
     public void Back()
     {
         AudioManager.Instance?.PlayButton();
+
         ShowMainMenu();
     }
 
@@ -109,16 +78,14 @@ public class MainMenuManager : MonoBehaviour
     {
         AudioManager.Instance?.PlayButton();
 
-        isRussian = true;
-        ShowMainMenu();
+        LocalizationManager.Instance.SetLanguage(Language.Russian);
     }
 
     public void SetEnglish()
     {
         AudioManager.Instance?.PlayButton();
 
-        isRussian = false;
-        ShowMainMenu();
+        LocalizationManager.Instance.SetLanguage(Language.English);
     }
 
     public void SelectSlot1()
@@ -126,7 +93,6 @@ public class MainMenuManager : MonoBehaviour
         AudioManager.Instance?.PlayButton();
 
         selectedSlot = 1;
-        Debug.Log("Выбран слот 1");
     }
 
     public void SelectSlot2()
@@ -134,7 +100,6 @@ public class MainMenuManager : MonoBehaviour
         AudioManager.Instance?.PlayButton();
 
         selectedSlot = 2;
-        Debug.Log("Выбран слот 2");
     }
 
     public void SelectSlot3()
@@ -142,7 +107,6 @@ public class MainMenuManager : MonoBehaviour
         AudioManager.Instance?.PlayButton();
 
         selectedSlot = 3;
-        Debug.Log("Выбран слот 3");
     }
 
     public void CreateSave()
@@ -155,15 +119,13 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
-        string saveName = isRussian ? inputRU.text : inputEN.text;
-
-        if (string.IsNullOrWhiteSpace(saveName))
+        if (string.IsNullOrWhiteSpace(saveNameInput.text))
         {
             Debug.Log("Введите название сохранения.");
             return;
         }
 
-        saveManager.CreateSave(selectedSlot, saveName);
+        saveManager.CreateSave(selectedSlot, saveNameInput.text);
         saveManager.SetCurrentSlot(selectedSlot);
 
         SceneManager.LoadScene("MainScene");
@@ -172,6 +134,7 @@ public class MainMenuManager : MonoBehaviour
     public void ExitGame()
     {
         AudioManager.Instance?.PlayButton();
+
         Application.Quit();
     }
 }
