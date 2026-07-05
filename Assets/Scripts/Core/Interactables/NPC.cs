@@ -2,8 +2,9 @@
 
 public class NPC : InteractableBase
 {
-    [SerializeField]
-    private string[] dialogue;
+    [Header("Dialogues")]
+    [SerializeField] private string[] russianDialogue;
+    [SerializeField] private string[] englishDialogue;
 
     public override void Interact()
     {
@@ -11,6 +12,11 @@ public class NPC : InteractableBase
             return;
 
         AudioManager.Instance?.PlayNPC();
+
+        string[] dialogue =
+            LocalizationManager.Instance.CurrentLanguage == Language.Russian
+            ? russianDialogue
+            : englishDialogue;
 
         if (!DialogueManager.Instance.IsDialogueOpen)
         {
