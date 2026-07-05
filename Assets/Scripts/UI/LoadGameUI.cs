@@ -39,17 +39,20 @@ public class LoadGameUI : MonoBehaviour
     }
 
     private void UpdateSlot(
-        int slot,
-        TMP_Text name,
-        TMP_Text created,
-        TMP_Text lastPlayed,
-        GameObject deleteButton)
+    int slot,
+    TMP_Text name,
+    TMP_Text created,
+    TMP_Text lastPlayed,
+    GameObject deleteButton)
     {
         SaveData save = saveManager.LoadSave(slot);
 
+        bool isRussian =
+            LocalizationManager.Instance.CurrentLanguage == Language.Russian;
+
         if (save == null)
         {
-            name.text = "Пусто";
+            name.text = isRussian ? "Пусто" : "Empty";
             created.text = "";
             lastPlayed.text = "";
 
@@ -58,8 +61,14 @@ public class LoadGameUI : MonoBehaviour
         }
 
         name.text = save.SaveName;
-        created.text = "Создан:\n" + save.CreatedAt;
-        lastPlayed.text = "Последняя игра:\n" + save.LastPlayedAt;
+
+        created.text =
+            (isRussian ? "Создан:\n" : "Created:\n")
+            + save.CreatedAt;
+
+        lastPlayed.text =
+            (isRussian ? "Последняя игра:\n" : "Last Played:\n")
+            + save.LastPlayedAt;
 
         deleteButton.SetActive(true);
     }
